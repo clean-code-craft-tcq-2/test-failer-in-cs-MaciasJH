@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace AlerterSpace {
     class Alerter {
@@ -8,6 +9,10 @@ namespace AlerterSpace {
             // Return 200 for ok
             // Return 500 for not-ok
             // stub always succeeds and returns 200
+            if (celcius <= 10 || celcius >= 160)
+            {
+                return 500;
+            }
             return 200;
         }
         static void alertInCelcius(float farenheit) {
@@ -22,10 +27,17 @@ namespace AlerterSpace {
             }
         }
         static void Main(string[] args) {
-            alertInCelcius(400.5f);
-            alertInCelcius(303.6f);
+            alertInCelcius(15.5f); // Should not generate an alert failure
+            Debug.Assert(alertFailureCount == 0);
+            alertInCelcius(400.5f); // Should generate an alert failure
+            Debug.Assert(alertFailureCount == 1);
+            alertInCelcius(303.6f); // Should not generate a failure
+            Debug.Assert(alertFailureCount == 1);
+            alertInCelcius(-20.6f); // Should generate a failure
+            Debug.Assert(alertFailureCount == 2);
             Console.WriteLine("{0} alerts failed.", alertFailureCount);
             Console.WriteLine("All is well (maybe!)\n");
+            Console.ReadKey();
         }
     }
 }
